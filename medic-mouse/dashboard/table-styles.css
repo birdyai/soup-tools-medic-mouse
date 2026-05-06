@@ -1,0 +1,186 @@
+/* Table Styles for Medical Conditions */
+.conditions-table {
+    width: 100%;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-collapse: collapse;
+}
+
+.conditions-table thead {
+    background: #f8f9fa;
+}
+
+.conditions-table th {
+    padding: 15px 20px;
+    text-align: left;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 2px solid #e5e5e5;
+}
+
+.conditions-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.condition-row {
+    transition: background-color 0.2s;
+}
+
+.condition-row:hover {
+    background-color: #f9fafb;
+}
+
+.condition-row.expandable {
+    cursor: pointer;
+}
+
+.condition-row.expanded {
+    background-color: #f1f5f9;
+}
+
+.condition-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.expand-icon {
+    color: #666;
+    transition: transform 0.2s;
+    font-size: 12px;
+}
+
+.condition-name {
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.type-badge {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.type-global {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.type-clinic {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.outcome-badge {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.outcome-yes {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.outcome-yes-with-exceptions {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.outcome-yes-with-doctor-note {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.outcome-cant-have-treatment {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.outcome-check-clinic {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+.outcome-unknown {
+    background: #e5e7eb;
+    color: #6b7280;
+}
+
+/* Clinic Details Section */
+.clinic-details-cell {
+    padding: 0 !important;
+    background: #f9fafb;
+}
+
+.clinics-table-container {
+    padding: 20px;
+}
+
+.clinics-table {
+    width: 100%;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e5e5e5;
+}
+
+.clinics-table thead {
+    background: #f3f4f6;
+}
+
+.clinics-table th {
+    padding: 10px 15px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+    color: #4b5563;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.clinics-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 14px;
+}
+
+.clinics-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.clinics-table tbody tr:hover {
+    background: #fafafa;
+}
+
+.clinic-name {
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.requirements-cell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.requirement-tag {
+    display: inline-block;
+    padding: 3px 8px;
+    background: #e0e7ff;
+    color: #3730a3;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.no-requirements {
+    color: #9ca3af;
+    font-style: italic;
+    font-size: 13px;
+}

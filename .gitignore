@@ -1,0 +1,9 @@
+credentials/
+config/
+logs/
+*.bak
+*.log
+*.jsonl
+.env
+.DS_Store
+node_modules/

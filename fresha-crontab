@@ -1,0 +1,2 @@
+# Fresha monitor - runs every minute
+* * * * * /bin/bash /Users/markjarvis/.openclaw/workspace/scripts/fresha-standalone-monitor.sh >/dev/null 2>&1

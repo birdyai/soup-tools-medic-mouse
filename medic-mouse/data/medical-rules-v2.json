@@ -1,0 +1,416 @@
+{
+  "conditions": {
+    "diabetes": {
+      "type": "clinic-dependent",
+      "clinics": {
+        "plush-aesthetics": {
+          "status": "yes with doctor's note",
+          "exceptions": [
+            "HbA1c < 7.5%",
+            "No active wounds",
+            "Doctor clearance required"
+          ]
+        },
+        "aura-aesthetics": {
+          "status": "complete no",
+          "exceptions": []
+        },
+        "villa-aesthetics": {
+          "status": "yes",
+          "exceptions": [
+            "HbA1c monitoring",
+            "Regular check-ups"
+          ]
+        },
+        "eden-aesthetics": {
+          "status": "yes with doctor's note",
+          "exceptions": [
+            "Written clearance within 30 days"
+          ]
+        },
+        "bloom-aesthetics": {
+          "status": "complete no",
+          "exceptions": []
+        },
+        "kaya-skin-clinic": {
+          "status": "yes",
+          "exceptions": [
+            "Stable condition for 6 months"
+          ]
+        }
+      }
+    },
+    "high-blood-pressure": {
+      "type": "clinic-dependent",
+      "clinics": {
+        "plush-aesthetics": {
+          "status": "yes with doctor's note",
+          "exceptions": [
+            "BP < 140/90",
+            "On medication"
+          ]
+        },
+        "aura-aesthetics": {
+          "status": "yes",
+          "exceptions": [
+            "BP monitoring"
+          ]
+        },
+        "villa-aesthetics": {
+          "status": "complete no",
+          "exceptions": []
+        },
+        "eden-aesthetics": {
+          "status": "yes with doctor's note",
+          "exceptions": [
+            "Recent BP reading"
+          ]
+        },
+        "bloom-aesthetics": {
+          "status": "yes",
+          "exceptions": [
+            "Controlled with medication"
+          ]
+        },
+        "kaya-skin-clinic": {
+          "status": "yes with doctor's note",
+          "exceptions": [
+            "Cardiologist clearance"
+          ]
+        }
+      }
+    },
+    "pregnancy": {
+      "type": "global",
+      "status": "complete no",
+      "exceptions": [
+        "Absolute contraindication for all aesthetic procedures"
+      ]
+    },
+    "accutane-isotretinoin": {
+      "type": "global",
+      "status": "complete no",
+      "exceptions": [
+        "Hydrafacial allowed",
+        "LED therapy allowed"
+      ]
+    },
+    "active-cancer": {
+      "type": "global",
+      "status": "complete no",
+      "exceptions": [
+        "Absolute contraindication"
+      ]
+    },
+    "active-infection": {
+      "type": "global",
+      "status": "complete no",
+      "exceptions": [
+        "Wait until infection is completely cleared"
+      ]
+    },
+    "blood-thinners": {
+      "type": "clinic-dependent",
+      "clinics": {
+        "plush-aesthetics": {
+          "status": "yes with doctor's note",
+          "exceptions": [
+            "Hematologist clearance",
+            "Stop medication if advised"
+          ]
+        },
+        "aura-aesthetics": {
+          "status": "complete no",
+          "exceptions": []
+        },
+        "villa-aesthetics": {
+          "status": "yes with doctor's note",
+          "exceptions": [
+            "Case-by-case evaluation"
+          ]
+        },
+        "eden-aesthetics": {
+          "status": "complete no",
+          "exceptions": []
+        },
+        "bloom-aesthetics": {
+          "status": "yes with doctor's note",
+          "exceptions": [
+            "Low-dose aspirin may be acceptable"
+          ]
+        },
+        "kaya-skin-clinic": {
+          "status": "yes with doctor's note",
+          "exceptions": [
+            "Written clearance required"
+          ]
+        }
+      }
+    },
+    "keloid-tendency": {
+      "type": "clinic-dependent",
+      "clinics": {
+        "plush-aesthetics": {
+          "status": "yes",
+          "exceptions": [
+            "Non-invasive treatments only"
+          ]
+        },
+        "aura-aesthetics": {
+          "status": "complete no",
+          "exceptions": []
+        },
+        "villa-aesthetics": {
+          "status": "complete no",
+          "exceptions": []
+        },
+        "eden-aesthetics": {
+          "status": "yes",
+          "exceptions": [
+            "Avoid aggressive treatments"
+          ]
+        },
+        "bloom-aesthetics": {
+          "status": "complete no",
+          "exceptions": []
+        },
+        "kaya-skin-clinic": {
+          "status": "yes with doctor's note",
+          "exceptions": [
+            "Dermatologist evaluation"
+          ]
+        }
+      }
+    },
+    "thyroid-disorders": {
+      "type": "clinic-dependent",
+      "clinics": {
+        "plush-aesthetics": {
+          "status": "yes",
+          "exceptions": [
+            "On stable medication",
+            "Normal TSH levels"
+          ]
+        },
+        "aura-aesthetics": {
+          "status": "yes",
+          "exceptions": [
+            "Regular monitoring"
+          ]
+        },
+        "villa-aesthetics": {
+          "status": "complete no",
+          "exceptions": []
+        },
+        "eden-aesthetics": {
+          "status": "yes with doctor's note",
+          "exceptions": [
+            "Endocrinologist clearance"
+          ]
+        },
+        "bloom-aesthetics": {
+          "status": "yes",
+          "exceptions": [
+            "Stable for 3 months"
+          ]
+        },
+        "kaya-skin-clinic": {
+          "status": "yes",
+          "exceptions": [
+            "TSH within normal range"
+          ]
+        }
+      }
+    },
+    "autoimmune-conditions": {
+      "type": "clinic-dependent",
+      "clinics": {
+        "plush-aesthetics": {
+          "status": "yes with doctor's note",
+          "exceptions": [
+            "Rheumatologist clearance",
+            "Avoid aggressive treatments"
+          ]
+        },
+        "aura-aesthetics": {
+          "status": "complete no",
+          "exceptions": []
+        },
+        "villa-aesthetics": {
+          "status": "complete no",
+          "exceptions": []
+        },
+        "eden-aesthetics": {
+          "status": "yes with doctor's note",
+          "exceptions": [
+            "Case-specific evaluation"
+          ]
+        },
+        "bloom-aesthetics": {
+          "status": "complete no",
+          "exceptions": []
+        },
+        "kaya-skin-clinic": {
+          "status": "yes with doctor's note",
+          "exceptions": [
+            "Specialist clearance required"
+          ]
+        }
+      }
+    },
+    "epilepsy": {
+      "type": "clinic-dependent",
+      "clinics": {
+        "plush-aesthetics": {
+          "status": "yes",
+          "exceptions": [
+            "Well-controlled",
+            "No photosensitive epilepsy"
+          ]
+        },
+        "aura-aesthetics": {
+          "status": "complete no",
+          "exceptions": []
+        },
+        "villa-aesthetics": {
+          "status": "complete no",
+          "exceptions": []
+        },
+        "eden-aesthetics": {
+          "status": "complete no",
+          "exceptions": []
+        },
+        "bloom-aesthetics": {
+          "status": "yes",
+          "exceptions": [
+            "Seizure-free for 6 months"
+          ]
+        },
+        "kaya-skin-clinic": {
+          "status": "yes with doctor's note",
+          "exceptions": [
+            "Neurologist clearance"
+          ]
+        }
+      }
+    },
+    "heart-disease": {
+      "type": "clinic-dependent",
+      "clinics": {
+        "plush-aesthetics": {
+          "status": "yes with doctor's note",
+          "exceptions": [
+            "Cardiologist clearance",
+            "Avoid extensive procedures"
+          ]
+        },
+        "aura-aesthetics": {
+          "status": "complete no",
+          "exceptions": []
+        },
+        "villa-aesthetics": {
+          "status": "complete no",
+          "exceptions": []
+        },
+        "eden-aesthetics": {
+          "status": "yes with doctor's note",
+          "exceptions": [
+            "Recent cardiac evaluation"
+          ]
+        },
+        "bloom-aesthetics": {
+          "status": "complete no",
+          "exceptions": []
+        },
+        "kaya-skin-clinic": {
+          "status": "yes with doctor's note",
+          "exceptions": [
+            "Written clearance from cardiologist"
+          ]
+        }
+      }
+    },
+    "pcos": {
+      "type": "global",
+      "status": "yes",
+      "exceptions": [
+        "No restrictions for aesthetic treatments"
+      ]
+    },
+    "melasma": {
+      "type": "clinic-dependent",
+      "clinics": {
+        "plush-aesthetics": {
+          "status": "yes",
+          "exceptions": [
+            "Avoid aggressive lasers",
+            "Use specific wavelengths"
+          ]
+        },
+        "aura-aesthetics": {
+          "status": "yes",
+          "exceptions": [
+            "Customized treatment protocol"
+          ]
+        },
+        "villa-aesthetics": {
+          "status": "yes",
+          "exceptions": [
+            "Gentle treatments only"
+          ]
+        },
+        "eden-aesthetics": {
+          "status": "yes",
+          "exceptions": [
+            "Sun protection mandatory"
+          ]
+        },
+        "bloom-aesthetics": {
+          "status": "yes",
+          "exceptions": [
+            "Conservative approach"
+          ]
+        },
+        "kaya-skin-clinic": {
+          "status": "yes",
+          "exceptions": [
+            "Specialized melasma protocols"
+          ]
+        }
+      }
+    },
+    "herpes-simplex": {
+      "type": "global",
+      "status": "yes",
+      "exceptions": [
+        "Prophylactic antivirals required before any facial procedures"
+      ]
+    },
+    "arthritis": {
+      "type": "unknown",
+      "status": "requires-research",
+      "addedBy": "medic-mouse-bot",
+      "dateAdded": "2026-04-02T12:36:50.391Z",
+      "originalName": "Arthritis"
+    }
+  },
+  "clinics": [
+    "plush-aesthetics",
+    "aura-aesthetics",
+    "villa-aesthetics",
+    "eden-aesthetics",
+    "bloom-aesthetics",
+    "kaya-skin-clinic"
+  ],
+  "statuses": [
+    "complete no",
+    "yes",
+    "yes with doctor's note"
+  ],
+  "analytics": {
+    "totalQueries": 2847,
+    "successfulMatches": 2634,
+    "unknownItems": 213,
+    "lastUpdated": "2026-04-02T10:55:00.000Z"
+  }
+}

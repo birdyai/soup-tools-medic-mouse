@@ -1,0 +1,196 @@
+{
+  "rules": [
+    {
+      "id": 1,
+      "condition": "Diabetes",
+      "clinics": [
+        "Plush Aesthetics",
+        "Aura Aesthetics",
+        "Villa Aesthetics"
+      ],
+      "status": "review",
+      "confidence": 0.9,
+      "exceptions": [
+        "HbA1c < 7.5%",
+        "No active wounds",
+        "Doctor clearance required"
+      ]
+    },
+    {
+      "id": 2,
+      "condition": "High Blood Pressure",
+      "clinics": [
+        "Plush Aesthetics",
+        "Aura Aesthetics"
+      ],
+      "status": "active",
+      "confidence": 0.95,
+      "exceptions": [
+        "BP < 140/90",
+        "On medication"
+      ]
+    },
+    {
+      "id": 3,
+      "condition": "Accutane/Isotretinoin",
+      "clinics": [
+        "All clinics - wait 6 months"
+      ],
+      "status": "active",
+      "confidence": 1,
+      "exceptions": [
+        "Hydrafacial allowed",
+        "LED therapy allowed"
+      ]
+    },
+    {
+      "id": 4,
+      "condition": "Pregnancy",
+      "clinics": [
+        "None - absolute contraindication"
+      ],
+      "status": "active",
+      "confidence": 1,
+      "exceptions": []
+    },
+    {
+      "id": 5,
+      "condition": "Blood Thinners",
+      "clinics": [
+        "Case by case evaluation"
+      ],
+      "status": "active",
+      "confidence": 0.95,
+      "exceptions": [
+        "Low-dose aspirin may be acceptable"
+      ]
+    },
+    {
+      "id": 6,
+      "condition": "Active Cancer",
+      "clinics": [
+        "None - absolute contraindication"
+      ],
+      "status": "active",
+      "confidence": 1,
+      "exceptions": []
+    },
+    {
+      "id": 7,
+      "condition": "Keloid Tendency",
+      "clinics": [
+        "Plush Aesthetics",
+        "Eden Aesthetics"
+      ],
+      "status": "review",
+      "confidence": 0.9,
+      "exceptions": [
+        "Non-invasive treatments only"
+      ]
+    },
+    {
+      "id": 8,
+      "condition": "Active Infection",
+      "clinics": [
+        "None - temporary contraindication"
+      ],
+      "status": "active",
+      "confidence": 1,
+      "exceptions": []
+    },
+    {
+      "id": 9,
+      "condition": "Thyroid Disorders",
+      "clinics": [
+        "Plush Aesthetics",
+        "Aura Aesthetics"
+      ],
+      "status": "active",
+      "confidence": 0.9,
+      "exceptions": [
+        "On stable medication",
+        "Normal TSH levels"
+      ]
+    },
+    {
+      "id": 10,
+      "condition": "Autoimmune Conditions",
+      "clinics": [
+        "Doctor clearance required"
+      ],
+      "status": "review",
+      "confidence": 0.85,
+      "exceptions": [
+        "Avoid aggressive treatments"
+      ]
+    },
+    {
+      "id": 11,
+      "condition": "Epilepsy",
+      "clinics": [
+        "Plush Aesthetics",
+        "Bloom Aesthetics"
+      ],
+      "status": "active",
+      "confidence": 0.9,
+      "exceptions": [
+        "Well-controlled",
+        "No photosensitive epilepsy"
+      ]
+    },
+    {
+      "id": 12,
+      "condition": "Heart Disease",
+      "clinics": [
+        "Doctor clearance required"
+      ],
+      "status": "review",
+      "confidence": 0.85,
+      "exceptions": [
+        "Avoid extensive procedures"
+      ]
+    },
+    {
+      "id": 13,
+      "condition": "PCOS",
+      "clinics": [
+        "All clinics"
+      ],
+      "status": "active",
+      "confidence": 0.95,
+      "exceptions": []
+    },
+    {
+      "id": 14,
+      "condition": "Melasma",
+      "clinics": [
+        "Plush Aesthetics",
+        "Kaya Skin Clinic"
+      ],
+      "status": "active",
+      "confidence": 0.9,
+      "exceptions": [
+        "Avoid aggressive lasers",
+        "Use specific wavelengths"
+      ]
+    },
+    {
+      "id": 15,
+      "condition": "Herpes Simplex",
+      "clinics": [
+        "All clinics with precautions"
+      ],
+      "status": "active",
+      "confidence": 0.95,
+      "exceptions": [
+        "Prophylactic antivirals required"
+      ]
+    }
+  ],
+  "analytics": {
+    "totalQueries": 2847,
+    "successfulMatches": 2634,
+    "unknownItems": 213,
+    "lastUpdated": "2026-04-02T10:41:49.743Z"
+  }
+}

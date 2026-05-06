@@ -1,0 +1,43 @@
+{
+  "display_information": {
+    "name": "Medic Mouse",
+    "description": "Medical clearance assistant for appointment angels",
+    "background_color": "#FF6B6B"
+  },
+  "features": {
+    "bot_user": {
+      "display_name": "Medic Mouse",
+      "always_online": true
+    }
+  },
+  "oauth_config": {
+    "scopes": {
+      "bot": [
+        "app_mentions:read",
+        "channels:history",
+        "channels:read",
+        "chat:write",
+        "groups:history",
+        "groups:read",
+        "im:history",
+        "im:read",
+        "mpim:history",
+        "mpim:read"
+      ]
+    }
+  },
+  "settings": {
+    "event_subscriptions": {
+      "bot_events": [
+        "app_mention",
+        "message.channels",
+        "message.groups"
+      ]
+    },
+    "interactivity": {
+      "is_enabled": false
+    },
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": true
+  }
+}

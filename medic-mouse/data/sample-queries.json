@@ -1,0 +1,192 @@
+{
+  "test_queries": [
+    {
+      "id": "q001",
+      "query": "I'm on warfarin and want laser hair removal at Plush",
+      "expected_result": {
+        "recommendation": "not_recommended",
+        "reason": "Blood thinner - increased bleeding risk",
+        "confidence": 0.95
+      }
+    },
+    {
+      "id": "q002",
+      "query": "I have diabetes and want botox at aura clinic",
+      "expected_result": {
+        "recommendation": "conditional_yes",
+        "conditions": ["Controlled diabetes only", "No neuropathy"],
+        "confidence": 0.85
+      }
+    },
+    {
+      "id": "q003",
+      "query": "I'm pregnant and want a hydrafacial",
+      "expected_result": {
+        "recommendation": "absolute_no",
+        "reason": "Pregnancy is universal contraindication",
+        "confidence": 1.0
+      }
+    },
+    {
+      "id": "q004",
+      "query": "I have a copper IUD and want RF treatment on my tummy at Villa",
+      "expected_result": {
+        "recommendation": "avoid_area",
+        "reason": "Metal interference with RF technology",
+        "alternatives": ["treat surrounding areas", "non-electromagnetic treatments"],
+        "confidence": 0.95
+      }
+    },
+    {
+      "id": "q005",
+      "query": "Just finished Accutane 3 months ago, can I get a chemical peel at plush aesthetic?",
+      "expected_result": {
+        "recommendation": "wait",
+        "wait_period": "3 more months (6 months total)",
+        "reason": "Accutane requires 6 month wait",
+        "confidence": 1.0
+      }
+    },
+    {
+      "id": "q006",
+      "query": "I have PCOS and want laser hair removal at Kaya",
+      "expected_result": {
+        "recommendation": "yes",
+        "notes": ["PCOS actually benefits from laser hair removal", "May need more sessions"],
+        "confidence": 0.95
+      }
+    },
+    {
+      "id": "q007",
+      "query": "I get cold sores and want lip fillers at Eden",
+      "expected_result": {
+        "recommendation": "yes_with_precautions",
+        "precautions": ["Prophylactic antivirals required", "Start 2 days before treatment"],
+        "confidence": 0.95
+      }
+    },
+    {
+      "id": "q008",
+      "query": "I have melasma and want IPL at bloom aesthetic",
+      "expected_result": {
+        "recommendation": "caution",
+        "reason": "IPL can worsen melasma if not done correctly",
+        "alternatives": ["Specialized melasma protocols", "Different laser wavelengths"],
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "q009",
+      "query": "Taking doxycycline for acne, can I get laser treatment?",
+      "expected_result": {
+        "recommendation": "not_recommended",
+        "reason": "Photosensitizing medication",
+        "wait_period": "2 weeks after stopping medication",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "q010",
+      "query": "I have a pacemaker and want HIFU on my neck at Derma One",
+      "expected_result": {
+        "recommendation": "conditional_yes",
+        "conditions": ["Neck treatment acceptable", "Avoid chest area completely"],
+        "confidence": 0.85
+      }
+    },
+    {
+      "id": "q011",
+      "query": "I have high blood pressure controlled with medication, can I get botox at plush?",
+      "expected_result": {
+        "recommendation": "yes",
+        "conditions": ["BP < 140/90", "Continue medication"],
+        "confidence": 0.95
+      }
+    },
+    {
+      "id": "q012",
+      "query": "I have active cancer treatment, want hydrafacial",
+      "expected_result": {
+        "recommendation": "absolute_no",
+        "reason": "Active cancer treatment is universal contraindication",
+        "confidence": 1.0
+      }
+    },
+    {
+      "id": "q013",
+      "query": "Thyroid issues on levothyroxine, can I get RF microneedling at Aura?",
+      "expected_result": {
+        "recommendation": "yes",
+        "conditions": ["Stable on medication", "Normal TSH levels preferred"],
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "q014",
+      "query": "I have lupus and want dermal fillers at Villa clinic",
+      "expected_result": {
+        "recommendation": "doctor_clearance_required",
+        "reason": "Autoimmune condition requires medical assessment",
+        "confidence": 0.8
+      }
+    },
+    {
+      "id": "q015",
+      "query": "I have a tattoo on my arm, can I get laser hair removal there?",
+      "expected_result": {
+        "recommendation": "avoid_tattooed_area",
+        "reason": "Laser can damage or alter tattoo",
+        "alternatives": ["Treat around tattoo", "Use other hair removal methods on tattoo"],
+        "confidence": 0.95
+      }
+    }
+  ],
+  "fuzzy_match_tests": [
+    {
+      "input": "plush",
+      "should_match": "plush_aesthetics"
+    },
+    {
+      "input": "Aura clinic",
+      "should_match": "aura_aesthetics"
+    },
+    {
+      "input": "eden derma",
+      "should_match": "eden_aesthetics"
+    },
+    {
+      "input": "blood pressure meds",
+      "should_match": "hypertension"
+    },
+    {
+      "input": "roaccutane",
+      "should_match": "accutane"
+    },
+    {
+      "input": "expecting",
+      "should_match": "pregnancy"
+    },
+    {
+      "input": "warfarin",
+      "should_match": "blood_thinners"
+    }
+  ],
+  "confidence_score_tests": [
+    {
+      "scenario": "Universal contraindication (pregnancy)",
+      "expected_confidence": 1.0
+    },
+    {
+      "scenario": "Well-documented condition with clear protocols",
+      "expected_confidence": 0.9
+    },
+    {
+      "scenario": "Case-by-case assessment needed",
+      "expected_confidence": 0.7
+    },
+    {
+      "scenario": "Limited data or clinic-specific variation",
+      "expected_confidence": 0.6
+    }
+  ]
+}

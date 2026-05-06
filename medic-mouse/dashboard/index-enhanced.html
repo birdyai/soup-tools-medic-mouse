@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medic Mouse Dashboard (Enhanced)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: #1a1a1a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            padding: 20px;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+        
+        .nav-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .nav-item.active {
+            background: rgba(220,38,38,0.2);
+            border-left: 3px solid #dc2626;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        /* Chat Styles */
+        .chat-window {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .user-message, .bot-message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        
+        .user-message {
+            background: #e3f2fd;
+            align-self: flex-end;
+            white-space: pre-wrap;
+        }
+        
+        .bot-message {
+            background: #f5f5f5;
+            align-self: flex-start;
+        }
+        
+        .chat-input-area {
+            padding: 20px;
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input-textarea {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: none;
+            font-family: inherit;
+        }
+        
+        .send-btn {
+            padding: 10px 20px;
+            background: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .send-btn:hover {
+            background: #b91c1c;
+        }
+        
+        /* Quick Templates */
+        .quick-templates {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .template-btn {
+            padding: 6px 12px;
+            margin-right: 10px;
+            background: #e5e5e5;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .template-btn:hover {
+            background: #d0d0d0;
+        }
+        
+        /* Analysis Panel */
+        .analysis-panel {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            min-height: 300px;
+        }
+        
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            🐭 Medic Mouse
+        </div>
+        <div class="nav-menu">
+            <div class="nav-item active" onclick="showPage('testing')">
+                <span class="nav-icon">🧪</span>
+                <span>Testing Console</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <h2>Chat Simulator</h2>
+        </div>
+        
+        <div class="content">
+            <div style="display: flex; gap: 20px;">
+                <!-- Chat Column -->
+                <div style="flex: 1;">
+                    <div class="quick-templates">
+                        <span>Quick Templates:</span>
+                        <button class="template-btn" onclick="loadTemplate('simple')">Simple Check</button>
+                        <button class="template-btn" onclick="loadTemplate('conditions')">Multiple Conditions</button>
+                        <button class="template-btn" onclick="loadTemplate('blood')">Blood Thinner</button>
+                        <button class="template-btn" onclick="loadTemplate('unknown')">Unknown Med</button>
+                    </div>
+                    
+                    <div class="chat-window">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="bot-message">
+                                <strong>Medic Mouse:</strong> 🐭 Hi! I'm the Medic Mouse test simulator. Send me patient queries and I'll show you how the bot would respond.
+                                <br><br>Just paste the message below and I'll process it!
+                            </div>
+                        </div>
+                        <div class="chat-input-area">
+                            <textarea class="chat-input-textarea" id="chatInput" 
+                                placeholder="Type or paste a message here..." 
+                                rows="6" 
+                                onkeydown="if(event.key==='Enter' && event.ctrlKey) sendMessage()"></textarea>
+                            <button class="send-btn" onclick="sendMessage()">Send</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Analysis Column -->
+                <div style="flex: 1;">
+                    <h3 style="margin-bottom: 20px;">🔍 Analysis Results</h3>
+                    <div id="analysisResults" class="analysis-panel">
+                        <p style="color: #999;">Send a message to see the analysis...</p>
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <h4>📊 Test Statistics</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                            <div class="stat-box">
+                                <div class="stat-label">Tests Run</div>
+                                <div class="stat-value" id="testCount">0</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-label">Success Rate</div>
+                                <div class="stat-value" id="successRate">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Emoji shortcode mapping
+        const emojiMap = {
+            ':hospital:': '🏥',
+            ':woman-raising-hand:': '🙋‍♀️',
+            ':man-raising-hand:': '🙋‍♂️',
+            ':pill:': '💊',
+            ':stethoscope:': '🩺',
+            ':clipboard:': '📋',
+            ':syringe:': '💉',
+            ':thermometer:': '🌡️',
+            ':woman:': '👩',
+            ':man:': '👨',
+            ':check:': '✅',
+            ':x:': '❌',
+            ':warning:': '⚠️',
+            ':question:': '❓',
+            ':calendar:': '📅',
+            ':clock:': '🕐',
+            ':phone:': '📱',
+            ':email:': '📧',
+            ':hospital_emoji:': '🏥',
+            ':medical_symbol:': '⚕️'
+        };
+        
+        // Convert emoji shortcodes to actual emojis
+        function convertShortcodesToEmojis(text) {
+            let converted = text;
+            
+            // Replace all known shortcodes
+            Object.entries(emojiMap).forEach(([shortcode, emoji]) => {
+                const regex = new RegExp(shortcode.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+                converted = converted.replace(regex, emoji);
+            });
+            
+            // Also handle generic pattern :word: that might be emoji shortcodes
+            converted = converted.replace(/:(\w+):/g, (match, p1) => {
+                // If we have a mapping for this, use it
+                const key = `:${p1}:`;
+                return emojiMap[key] || match;
+            });
+            
+            return converted;
+        }
+        
+        // Template messages
+        const templates = {
+            simple: `🏥 Clinic Name: Plush Aesthetics
+🙋‍♀️ Lead First Name: Sarah
+🩺 Medical Condition: Diabetes
+💊 Current Medications: Metformin
+📋 Medication Type: Blood sugar control`,
+            
+            conditions: `🏥 Clinic Name: The Contour Co
+👩 Lead First Name: Alison
+🩺 Medical Condition: Osteoarthritis
+🩺 Medical Condition: Vitamin B12 Deficiency
+💊 Current Medications: HRT Gel & Tablets
+💊 Current Medications: Vitamin B12
+📋 Treating: tummy`,
+            
+            blood: `🏥 Clinic Name: Aura Aesthetics
+🙋‍♀️ Lead First Name: Jessica
+🩺 Medical Condition: Heart Disease
+💊 Current Medications: Warfarin
+📋 Medication Type: Blood thinner`,
+            
+            unknown: `🏥 Clinic Name: Elite Clinic
+👨 Lead First Name: Mohammed
+🩺 Medical Condition: Hypertension
+💊 Current Medications: Amlodipine
+💊 Current Medications: Mysterymed XR
+📋 Medication Type: Blood pressure`
+        };
+        
+        function loadTemplate(type) {
+            const input = document.getElementById('chatInput');
+            input.value = templates[type] || '';
+            input.focus();
+        }
+        
+        function parseStructuredMessage(message) {
+            const lines = message.split('\n').map(l => l.trim()).filter(l => l);
+            const data = {
+                clinic: '',
+                leadName: '',
+                conditions: [],
+                medications: [],
+                medicationTypes: [],
+                treatmentArea: ''
+            };
+            
+            lines.forEach(line => {
+                // Remove emojis and normalize
+                const cleanLine = line.replace(/[\u{1F300}-\u{1FAD6}]/gu, '').trim();
+                
+                if (cleanLine.toLowerCase().includes('clinic name:')) {
+                    data.clinic = cleanLine.split(':').slice(1).join(':').trim();
+                } else if (cleanLine.toLowerCase().includes('lead first name:')) {
+                    data.leadName = cleanLine.split(':').slice(1).join(':').trim();
+                } else if (cleanLine.toLowerCase().includes('medical condition:')) {
+                    const condition = cleanLine.split(':').slice(1).join(':').trim();
+                    if (condition && condition.toLowerCase() !== 'none') {
+                        data.conditions.push(condition);
+                    }
+                } else if (cleanLine.toLowerCase().includes('current medications')) {
+                    const med = cleanLine.split(':').slice(1).join(':').trim();
+                    if (med && !med.toLowerCase().includes('name') && med.toLowerCase() !== 'none') {
+                        data.medications.push(med);
+                    }
+                } else if (cleanLine.toLowerCase().includes('medication type')) {
+                    const type = cleanLine.split(':').slice(1).join(':').trim();
+                    if (type && !type.toLowerCase().includes('e.g.')) {
+                        data.medicationTypes.push(type);
+                    }
+                } else if (cleanLine.toLowerCase().includes('treating:')) {
+                    data.treatmentArea = cleanLine.split(':').slice(1).join(':').trim();
+                }
+            });
+            
+            return data;
+        }
+        
+        let testStats = {
+            count: 0,
+            successful: 0
+        };
+        
+        function sendMessage() {
+            const input = document.getElementById('chatInput').value.trim();
+            if (!input) return;
+            
+            const chatMessages = document.getElementById('chatMessages');
+            
+            // Convert shortcodes to emojis in the input
+            const convertedInput = convertShortcodesToEmojis(input);
+            
+            // Add user message (show converted version)
+            const userMsg = document.createElement('div');
+            userMsg.className = 'user-message';
+            userMsg.style.whiteSpace = 'pre-wrap';
+            userMsg.textContent = convertedInput;
+            chatMessages.appendChild(userMsg);
+            
+            // Clear input
+            document.getElementById('chatInput').value = '';
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Show typing indicator
+            const typingMsg = document.createElement('div');
+            typingMsg.className = 'bot-message';
+            typingMsg.innerHTML = '<em>Medic Mouse is typing...</em>';
+            chatMessages.appendChild(typingMsg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Process message
+            setTimeout(() => {
+                // Remove typing indicator
+                if (chatMessages.contains(typingMsg)) {
+                    chatMessages.removeChild(typingMsg);
+                }
+                
+                // Parse the message (use converted version)
+                const parsed = parseStructuredMessage(convertedInput);
+                
+                // Generate response
+                let response = '';
+                let analysisHtml = '<div style="padding: 20px;">';
+                
+                // Show extracted information
+                analysisHtml += '<h4 style="margin-bottom: 15px; color: #dc2626;">📋 Extracted Information</h4>';
+                analysisHtml += '<div style="background: #fef2f2; padding: 15px; border-radius: 6px; margin-bottom: 20px;">';
+                
+                if (parsed.clinic) {
+                    analysisHtml += `<p><strong>Clinic Name:</strong> ${parsed.clinic}</p>`;
+                }
+                if (parsed.leadName) {
+                    analysisHtml += `<p><strong>Lead Name:</strong> ${parsed.leadName}</p>`;
+                }
+                if (parsed.treatmentArea) {
+                    analysisHtml += `<p><strong>Treatment Area:</strong> ${parsed.treatmentArea}</p>`;
+                }
+                analysisHtml += '</div>';
+                
+                // Show conditions
+                if (parsed.conditions.length > 0) {
+                    analysisHtml += '<h4 style="margin-bottom: 10px;">🩺 Medical Conditions (' + parsed.conditions.length + ' found)</h4>';
+                    parsed.conditions.forEach((condition, idx) => {
+                        analysisHtml += `<div style="background: #fef3c7; padding: 10px; margin-bottom: 5px; border-radius: 4px;">`;
+                        analysisHtml += `<strong>${idx + 1}. ${condition}:</strong> <span style="background: #f59e0b; color: white; padding: 2px 8px; border-radius: 3px; font-size: 12px;">NEEDS CHECK</span>`;
+                        analysisHtml += `</div>`;
+                    });
+                }
+                
+                // Show medications
+                if (parsed.medications.length > 0) {
+                    analysisHtml += '<h4 style="margin-top: 20px; margin-bottom: 10px;">💊 Current Medications (' + parsed.medications.length + ' found)</h4>';
+                    parsed.medications.forEach((med, idx) => {
+                        const isBloodThinner = parsed.medicationTypes[idx] && parsed.medicationTypes[idx].toLowerCase().includes('blood thinner');
+                        analysisHtml += `<div style="background: ${isBloodThinner ? '#fee2e2' : '#fef3c7'}; padding: 10px; margin-bottom: 5px; border-radius: 4px;">`;
+                        analysisHtml += `<strong>${idx + 1}. ${med}:</strong> `;
+                        if (isBloodThinner) {
+                            analysisHtml += `<span style="background: #dc2626; color: white; padding: 2px 8px; border-radius: 3px; font-size: 12px;">CONTRAINDICATED</span>`;
+                        } else {
+                            analysisHtml += `<span style="background: #f59e0b; color: white; padding: 2px 8px; border-radius: 3px; font-size: 12px;">NEEDS CHECK</span>`;
+                        }
+                        analysisHtml += `</div>`;
+                    });
+                }
+                
+                // Overall decision
+                const hasBloodThinner = parsed.medicationTypes.some(type => 
+                    type.toLowerCase().includes('blood thinner')
+                );
+                
+                analysisHtml += '<h4 style="margin-top: 20px; margin-bottom: 10px;">✅ Overall Decision</h4>';
+                if (hasBloodThinner) {
+                    analysisHtml += '<div style="background: #fee2e2; padding: 15px; border-radius: 6px; border: 1px solid #dc2626;">';
+                    analysisHtml += '<span style="background: #dc2626; color: white; padding: 2px 8px; border-radius: 3px; font-size: 12px;">CONTRAINDICATED</span>';
+                    analysisHtml += '<p style="margin-top: 10px;">Blood thinners are a complete contraindication for aesthetic treatments</p>';
+                    analysisHtml += '</div>';
+                    response = `Hi ${parsed.leadName || 'there'}, I've reviewed the medical information. Unfortunately, blood thinners are a complete contraindication for aesthetic treatments due to bleeding risk. Please consult with your healthcare provider about timing for treatments.`;
+                } else if (parsed.conditions.length > 0 || parsed.medications.length > 0) {
+                    analysisHtml += '<div style="background: #fef3c7; padding: 15px; border-radius: 6px; border: 1px solid #f59e0b;">';
+                    analysisHtml += '<span style="background: #f59e0b; color: white; padding: 2px 8px; border-radius: 3px; font-size: 12px;">NEEDS CHECK</span>';
+                    analysisHtml += '<p style="margin-top: 10px;">Items need manual verification before booking</p>';
+                    analysisHtml += '</div>';
+                    response = `Hi ${parsed.leadName || 'there'}, I need to check with the messengers about: ${parsed.conditions.concat(parsed.medications).join(', ')}. Please check with The Contour Co about the above items.`;
+                } else {
+                    analysisHtml += '<div style="background: #d1fae5; padding: 15px; border-radius: 6px; border: 1px solid #10b981;">';
+                    analysisHtml += '<span style="background: #10b981; color: white; padding: 2px 8px; border-radius: 3px; font-size: 12px;">READY TO BOOK</span>';
+                    analysisHtml += '<p style="margin-top: 10px;">No medical contraindications found</p>';
+                    analysisHtml += '</div>';
+                    response = `Hi ${parsed.leadName || 'there'}, great news! I don't see any medical contraindications for your treatment. You can proceed with booking!`;
+                }
+                
+                analysisHtml += '</div>';
+                
+                // Update analysis panel
+                document.getElementById('analysisResults').innerHTML = analysisHtml;
+                
+                // Add bot response
+                const botMsg = document.createElement('div');
+                botMsg.className = 'bot-message';
+                botMsg.innerHTML = `<strong>Medic Mouse:</strong> ${response}`;
+                chatMessages.appendChild(botMsg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Update stats
+                testStats.count++;
+                if (parsed.conditions.length > 0 || parsed.medications.length > 0) {
+                    testStats.successful++;
+                }
+                updateStats();
+                
+            }, 1500);
+        }
+        
+        function updateStats() {
+            document.getElementById('testCount').textContent = testStats.count;
+            const rate = testStats.count > 0 ? Math.round((testStats.successful / testStats.count) * 100) : 0;
+            document.getElementById('successRate').textContent = rate + '%';
+        }
+        
+        function showPage(page) {
+            // For this simple version, we only have one page
+        }
+    </script>
+</body>
+</html>

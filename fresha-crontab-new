@@ -1,0 +1,2 @@
+# Fresha monitor - check every minute
+* * * * * /bin/bash /Users/markjarvis/.openclaw/workspace/scripts/fresha-simple-alert.sh
