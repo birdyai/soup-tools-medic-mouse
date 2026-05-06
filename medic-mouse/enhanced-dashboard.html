@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medic Mouse Test Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 80vh;
+        }
+        .panel {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        h2 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background: #f9f9f9;
+        }
+        .message {
+            margin: 10px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .message.user {
+            flex-direction: row-reverse;
+        }
+        .message-content {
+            max-width: 70%;
+            padding: 8px 12px;
+            border-radius: 16px;
+            word-wrap: break-word;
+        }
+        .message.user .message-content {
+            background: #007aff;
+            color: white;
+        }
+        .message.bot .message-content {
+            background: #e5e5ea;
+            color: #000;
+        }
+        .message-time {
+            font-size: 0.75em;
+            color: #666;
+            margin-top: 2px;
+        }
+        .input-area {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            background: white;
+        }
+        #messageInput {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+        #sendButton {
+            padding: 8px 16px;
+            background: #007aff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        #sendButton:hover {
+            background: #0051d5;
+        }
+        .template-buttons {
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .template-btn {
+            padding: 5px 12px;
+            background: #e0e0e0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .template-btn:hover {
+            background: #d0d0d0;
+        }
+        .analysis-section {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .analysis-section h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .extracted-info {
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .condition-item {
+            padding: 8px;
+            margin: 5px 0;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 4px;
+        }
+        .medication-item {
+            padding: 8px;
+            margin: 5px 0;
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            border-radius: 4px;
+        }
+        .decision-box {
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .decision-approve {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+        .decision-check {
+            background: #fff3cd;
+            color: #856404;
+            border: 2px solid #ffc107;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        .status-check {
+            background: #ffc107;
+            color: #000;
+        }
+        .json-display {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        .clear-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .clear-btn:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <h1>🐭 Medic Mouse Test Dashboard</h1>
+    
+    <div class="container">
+        <div class="panel">
+            <h2>💬 Chat Simulator</h2>
+            
+            <div class="template-buttons">
+                <strong>Quick Templates:</strong>
+                <button class="template-btn" onclick="sendTemplate('simple')">Simple Check</button>
+                <button class="template-btn" onclick="sendTemplate('multiple')">Multiple Conditions</button>
+                <button class="template-btn" onclick="sendTemplate('thinner')">Blood Thinner</button>
+                <button class="template-btn" onclick="sendTemplate('unknown')">Unknown Med</button>
+            </div>
+            
+            <div class="chat-container">
+                <div class="messages" id="messages"></div>
+                <div class="input-area">
+                    <input type="text" id="messageInput" placeholder="Type a message or use a template..." onkeypress="handleKeyPress(event)">
+                    <button id="sendButton" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel">
+            <h2>
+                🔍 Analysis Results
+                <button class="clear-btn" onclick="clearResults()">Clear</button>
+            </h2>
+            <div id="analysisResults">
+                <p style="color: #666;">Send a message to see the bot analysis...</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Emoji mapping
+        const emojiMap = {
+            ':hospital:': '🏥',
+            ':woman-raising-hand:': '🙋‍♀️',
+            ':pill:': '💊',
+            ':clipboard:': '📋',
+            ':warning:': '⚠️',
+            ':white_check_mark:': '✅',
+            ':x:': '❌',
+            ':question:': '❓',
+            ':syringe:': '💉',
+            ':stethoscope:': '🩺',
+            ':ambulance:': '🚑',
+            ':mask:': '😷',
+            ':thermometer:': '🌡️',
+            ':test_tube:': '🧪',
+            ':microscope:': '🔬',
+            ':dna:': '🧬',
+            ':heart:': '❤️',
+            ':brain:': '🧠',
+            ':bone:': '🦴',
+            ':tooth:': '🦷',
+            ':eye:': '👁️',
+            ':ear:': '👂',
+            ':nose:': '👃',
+            ':leg:': '🦵',
+            ':foot:': '🦶',
+            ':muscle:': '💪',
+            ':hand-raising-woman:': '🙋‍♀️',
+            ':hand-raised:': '✋',
+            ':woman-doctor:': '👩‍⚕️',
+            ':man-doctor:': '👨‍⚕️'
+        };
+        
+        // Convert emoji shortcodes to actual emojis
+        function convertEmojis(text) {
+            let converted = text;
+            Object.entries(emojiMap).forEach(([shortcode, emoji]) => {
+                converted = converted.replace(new RegExp(shortcode, 'g'), emoji);
+            });
+            return converted;
+        }
+        
+        // Templates with emoji shortcodes
+        const templates = {
+            simple: ":hospital: Clinic Name: The Contour Co :woman-raising-hand: Lead First Name: Alison Medical Condition: Osteoarthritis, Vitamin B12 Deficiency, HRT :pill: Current Medications: HRT Gel & Tablets, Vitamin B12 :clipboard: Treating: tummy",
+            multiple: ":hospital: Bondi Smile Dental Clinic :woman-raising-hand: Jennifer Patient: Multiple medical conditions - HRT, depression, anxiety, heart condition :pill: Medications: Hormone patches, Zoloft, Xanax, Lipitor :clipboard: Dental cleaning requested",
+            thinner: ":hospital: Dubai Smiles :woman-raising-hand: Patient: Mary Johnson :warning: Medical: Takes warfarin (blood thinner) :clipboard: Treatment: Routine check-up",
+            unknown: ":hospital: Elite Medical Center :woman-raising-hand: Patient Name: Sarah :pill: Takes medication but doesn't remember the name - small blue pills for blood pressure :clipboard: Needs flu shot"
+        };
+        
+        // Remove emojis from text
+        function removeEmojis(text) {
+            return text.replace(/[\u{1F300}-\u{1FAD6}]/gu, '').trim();
+        }
+        
+        function parseInput(message) {
+            const cleanMessage = removeEmojis(message);
+            
+            // More flexible patterns
+            const clinicPattern = /(?:clinic\s*name|clinic|hospital|center|medical|dental)\s*[:=-]?\s*([^:,\n]+?)(?=\s*(?:lead|patient|woman|man|first|name|medical|:)|$)/i;
+            const leadPattern = /(?:lead\s*(?:first\s*)?name|patient\s*name|patient|name|woman|man)\s*[:=-]?\s*([^:,\n]+?)(?=\s*(?:medical|condition|takes|medication|treatment|dental|:)|$)/i;
+            const conditionPattern = /(?:medical\s*condition|condition|medical|diagnosis|has|suffers?\s*from)\s*[:=-]?\s*([^:]+?)(?=\s*(?:current|medication|pill|treatment|takes|:)|$)/i;
+            const medicationPattern = /(?:current\s*medications?|medications?|takes?|pills?|meds?)\s*[:=-]?\s*(.+?)(?=\s*(?:treating|treatment|needs|wants|dental|:)|$)/i;
+            const treatmentPattern = /(?:treating|treatment|needs?|wants?|dental|procedure|requesting)\s*[:=-]?\s*(.+?)$/i;
+            
+            const clinicMatch = cleanMessage.match(clinicPattern);
+            const leadMatch = cleanMessage.match(leadPattern);
+            const conditionMatch = cleanMessage.match(conditionPattern);
+            const medicationMatch = cleanMessage.match(medicationPattern);
+            const treatmentMatch = cleanMessage.match(treatmentPattern);
+            
+            const parsed = {
+                clinicName: clinicMatch ? clinicMatch[1].trim() : 'Unknown Clinic',
+                leadName: leadMatch ? leadMatch[1].trim() : 'Unknown Patient',
+                conditions: conditionMatch ? conditionMatch[1].trim() : '',
+                medications: medicationMatch ? medicationMatch[1].trim() : '',
+                treatmentArea: treatmentMatch ? treatmentMatch[1].trim() : ''
+            };
+            
+            console.log('Parsed:', parsed);
+            return parsed;
+        }
+        
+        function analyzeBooking(data) {
+            const conditions = data.conditions.toLowerCase();
+            const medications = data.medications.toLowerCase();
+            
+            let decision = 'APPROVED';
+            let reasons = [];
+            let conditionsList = [];
+            let medicationsList = [];
+            
+            // Extract conditions
+            const conditionKeywords = ['osteoarthritis', 'vitamin b12 deficiency', 'hrt', 'depression', 'anxiety', 
+                                     'heart condition', 'heart', 'diabetes', 'blood pressure', 'hypertension',
+                                     'epilepsy', 'cancer', 'kidney', 'liver'];
+            
+            conditionKeywords.forEach(keyword => {
+                if (conditions.includes(keyword) || data.conditions.includes(keyword)) {
+                    conditionsList.push({ name: keyword, needsCheck: keyword === 'heart condition' || keyword === 'heart' });
+                }
+            });
+            
+            // Extract medications
+            const medicationKeywords = {
+                'hrt': { needsCheck: true },
+                'warfarin': { needsCheck: true },
+                'blood thinner': { needsCheck: true },
+                'vitamin b12': { needsCheck: false },
+                'zoloft': { needsCheck: false },
+                'xanax': { needsCheck: false },
+                'lipitor': { needsCheck: false },
+                'hormone': { needsCheck: true },
+                'unknown': { needsCheck: true },
+                'blue pills': { needsCheck: true }
+            };
+            
+            Object.entries(medicationKeywords).forEach(([med, config]) => {
+                if (medications.includes(med) || (medications.includes('unknown') && med === 'unknown')) {
+                    medicationsList.push({ name: med, needsCheck: config.needsCheck });
+                    if (config.needsCheck) {
+                        decision = 'NEEDS CHECK';
+                        reasons.push(`${med} requires verification`);
+                    }
+                }
+            });
+            
+            // Check for heart conditions
+            if (conditions.includes('heart')) {
+                decision = 'NEEDS CHECK';
+                reasons.push('Heart condition requires medical consultation');
+            }
+            
+            // Check for unknown medications
+            if (medications.includes("doesn't remember") || medications.includes("unknown")) {
+                decision = 'NEEDS CHECK';
+                reasons.push('Unknown medication needs clarification');
+            }
+            
+            return {
+                decision,
+                reasons,
+                conditionsList,
+                medicationsList
+            };
+        }
+        
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                // Convert shortcodes to emojis for display
+                const displayMessage = convertEmojis(message);
+                addMessage(displayMessage, 'user');
+                
+                // Simulate bot response
+                setTimeout(() => {
+                    const response = "I'll analyze this patient information for you...";
+                    addMessage(response, 'bot');
+                    
+                    // Analyze the message
+                    const parsed = parseInput(message);
+                    const analysis = analyzeBooking(parsed);
+                    updateAnalysis(parsed, analysis);
+                }, 500);
+                
+                input.value = '';
+            }
+        }
+        
+        function addMessage(text, sender) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = text;
+            
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'message-time';
+            timeDiv.textContent = new Date().toLocaleTimeString();
+            
+            const wrapper = document.createElement('div');
+            wrapper.appendChild(contentDiv);
+            wrapper.appendChild(timeDiv);
+            
+            messageDiv.appendChild(wrapper);
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        function updateAnalysis(parsed, analysis) {
+            const resultsDiv = document.getElementById('analysisResults');
+            
+            let html = `
+                <div class="analysis-section">
+                    <h3>📋 Extracted Information</h3>
+                    <div class="extracted-info">
+                        <strong>Clinic Name:</strong> ${parsed.clinicName}<br>
+                        <strong>Lead Name:</strong> ${parsed.leadName}<br>
+                        <strong>Treatment Area:</strong> ${parsed.treatmentArea || 'Not specified'}
+                    </div>
+                </div>
+            `;
+            
+            if (analysis.conditionsList.length > 0) {
+                html += `
+                    <div class="analysis-section">
+                        <h3>🏥 Medical Conditions (${analysis.conditionsList.length} found)</h3>
+                `;
+                
+                analysis.conditionsList.forEach((condition, index) => {
+                    html += `
+                        <div class="condition-item">
+                            ${index + 1}. ${condition.name.charAt(0).toUpperCase() + condition.name.slice(1)}:
+                            <span class="status-badge status-check">${condition.needsCheck ? 'NEEDS CHECK' : 'OK'}</span>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+            }
+            
+            if (analysis.medicationsList.length > 0) {
+                html += `
+                    <div class="analysis-section">
+                        <h3>💊 Current Medications (${analysis.medicationsList.length} found)</h3>
+                `;
+                
+                analysis.medicationsList.forEach((med, index) => {
+                    html += `
+                        <div class="medication-item">
+                            ${index + 1}. ${med.name}:
+                            <span class="status-badge status-check">${med.needsCheck ? 'NEEDS CHECK' : 'OK'}</span>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+            }
+            
+            const decisionClass = analysis.decision === 'APPROVED' ? 'decision-approve' : 'decision-check';
+            html += `
+                <div class="decision-box ${decisionClass}">
+                    ${analysis.decision === 'APPROVED' ? '✅' : '⚠️'} Overall Decision: 
+                    <span class="status-badge status-check">${analysis.decision}</span><br>
+                    ${analysis.reasons.length > 0 ? '<small>' + analysis.reasons.join(', ') + '</small>' : '<small>Ready for booking</small>'}
+                </div>
+            `;
+            
+            // Add JSON display
+            html += `
+                <div class="analysis-section">
+                    <h3>📊 Raw Analysis Data</h3>
+                    <div class="json-display">
+                        ${JSON.stringify({ parsed, analysis }, null, 2)}
+                    </div>
+                </div>
+            `;
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        function sendTemplate(type) {
+            const input = document.getElementById('messageInput');
+            input.value = templates[type];
+            sendMessage();
+        }
+        
+        function clearResults() {
+            document.getElementById('analysisResults').innerHTML = '<p style="color: #666;">Send a message to see the bot analysis...</p>';
+            document.getElementById('messages').innerHTML = '';
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+        
+        // Add initial bot message
+        addMessage("👋 Hi! I'm the Medic Mouse test simulator. Send me patient queries and I'll show you how the bot would respond. Just now", 'bot');
+    </script>
+</body>
+</html>

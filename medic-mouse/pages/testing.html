@@ -1,0 +1,372 @@
+<!-- Medic Mouse Testing Page - Template Version -->
+<!-- This file contains just the content, no <html>, <head>, or <body> tags -->
+<!-- Styles specific to this page can be included inline or in a <style> tag -->
+
+<style>
+    /* Page-specific styles for testing console */
+    .test-container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .chat-window {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        height: 400px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .chat-messages {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .user-message, .bot-message {
+        max-width: 80%;
+        padding: 12px 16px;
+        border-radius: 10px;
+        word-wrap: break-word;
+    }
+    
+    .user-message {
+        background: #3b82f6;
+        color: white;
+        align-self: flex-end;
+        margin-left: auto;
+        white-space: pre-wrap;
+    }
+    
+    .bot-message {
+        background: #f3f4f6;
+        color: #1f2937;
+        align-self: flex-start;
+    }
+    
+    .chat-input-area {
+        display: flex;
+        gap: 10px;
+        padding: 15px;
+        border-top: 1px solid #e5e5e5;
+        background: #fafafa;
+        border-radius: 0 0 10px 10px;
+    }
+    
+    .chat-input-textarea {
+        flex: 1;
+        padding: 10px 15px;
+        border: 1px solid #e5e5e5;
+        border-radius: 5px;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s;
+        resize: vertical;
+        font-family: inherit;
+        line-height: 1.4;
+    }
+    
+    .send-btn {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.2s;
+    }
+    
+    .send-btn:hover {
+        background: #2563eb;
+    }
+    
+    .analysis-panel {
+        background: #f9fafb;
+        border: 1px solid #e5e5e5;
+        border-radius: 10px;
+        padding: 20px;
+        min-height: 300px;
+    }
+    
+    .stat-box {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .stat-label {
+        font-size: 12px;
+        color: #6b7280;
+        margin-bottom: 5px;
+    }
+    
+    .stat-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #1f2937;
+    }
+</style>
+
+<div class="test-container">
+    <div style="display: flex; gap: 20px; height: 600px;">
+        <!-- Chat Simulator Column -->
+        <div style="flex: 1;">
+            <h3 style="margin-bottom: 20px;">Chat Simulator</h3>
+            
+            <p style="font-size: 14px; color: #666; margin-bottom: 20px;">
+                Paste a message in the standard format to test the bot's response:
+            </p>
+            
+            <!-- Chat Window -->
+            <div class="chat-window">
+                <div class="chat-messages" id="testChatMessages">
+                    <!-- Messages will appear here -->
+                </div>
+                <div class="chat-input-area">
+                    <textarea class="chat-input-textarea" 
+                              id="testChatInput" 
+                              placeholder="Paste message here...
+Example:
+🏥 Clinic Name: Plush Aesthetics
+🙋‍♀️ Lead First Name: Sarah
+🩺 Medical Condition: Diabetes
+💊 Current Medications (Name): Metformin
+📋 Medication Type: Blood sugar control" 
+                              rows="6" 
+                              onkeydown="if(event.key==='Enter' && event.ctrlKey) sendTestMessage()"></textarea>
+                    <button class="send-btn" onclick="sendTestMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Analysis Results Column -->
+        <div style="flex: 1;">
+            <h3 style="margin-bottom: 20px;">Analysis Results</h3>
+            <div id="testAnalysisResults" class="analysis-panel">
+                <p style="color: #999;">Send a message to see the analysis...</p>
+            </div>
+            
+            <!-- Statistics -->
+            <div class="stats-panel" style="margin-top: 20px;">
+                <h4>Test Statistics</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                    <div class="stat-box">
+                        <div class="stat-label">Tests Run</div>
+                        <div class="stat-value" id="testCount">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Success Rate</div>
+                        <div class="stat-value" id="testSuccessRate">0%</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Avg Response Time</div>
+                        <div class="stat-value" id="testAvgResponseTime">0ms</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Unknown Items</div>
+                        <div class="stat-value" id="testUnknownCount">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Testing page functionality
+    let testStats = {
+        count: 0,
+        successful: 0,
+        totalTime: 0,
+        unknownItems: 0
+    };
+    
+    // Initialize the testing page
+    window.initTestingPage = function() {
+        console.log('Testing page initialized');
+        // Reset stats on page load
+        updateTestStats();
+    };
+    
+    function parseStructuredMessage(message) {
+        const lines = message.split('\n').map(l => l.trim()).filter(l => l);
+        const data = {
+            clinic: '',
+            leadName: '',
+            conditions: [],
+            medications: [],
+            medicationTypes: []
+        };
+        
+        lines.forEach(line => {
+            const cleanLine = line.replace(/[\u{1F300}-\u{1FAD6}]/gu, '').trim();
+            
+            if (cleanLine.toLowerCase().includes('clinic name:')) {
+                data.clinic = cleanLine.split(':').slice(1).join(':').trim();
+            } else if (cleanLine.toLowerCase().includes('lead first name:')) {
+                data.leadName = cleanLine.split(':').slice(1).join(':').trim();
+            } else if (cleanLine.toLowerCase().includes('medical condition:')) {
+                const condition = cleanLine.split(':').slice(1).join(':').trim();
+                if (condition) data.conditions.push(condition);
+            } else if (cleanLine.toLowerCase().includes('current medications')) {
+                const med = cleanLine.split(':').slice(1).join(':').trim();
+                if (med && !med.toLowerCase().includes('name')) data.medications.push(med);
+            } else if (cleanLine.toLowerCase().includes('medication type')) {
+                const type = cleanLine.split(':').slice(1).join(':').trim();
+                if (type && !type.toLowerCase().includes('e.g.')) data.medicationTypes.push(type);
+            }
+        });
+        
+        return data;
+    }
+    
+    async function sendTestMessage() {
+        const input = document.getElementById('testChatInput').value.trim();
+        if (!input) return;
+        
+        const chatMessages = document.getElementById('testChatMessages');
+        const startTime = Date.now();
+        
+        // Add user message
+        const userMsg = document.createElement('div');
+        userMsg.className = 'user-message';
+        userMsg.textContent = input;
+        chatMessages.appendChild(userMsg);
+        
+        // Clear input
+        document.getElementById('testChatInput').value = '';
+        
+        // Scroll to bottom
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // Show typing indicator
+        const typingMsg = document.createElement('div');
+        typingMsg.className = 'bot-message';
+        typingMsg.innerHTML = '<em>Medic Mouse is typing...</em>';
+        chatMessages.appendChild(typingMsg);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // Simulate processing
+        setTimeout(() => {
+            // Remove typing indicator
+            chatMessages.removeChild(typingMsg);
+            
+            // Parse and analyze
+            const parsedData = parseStructuredMessage(input);
+            const response = generateTestResponse(parsedData);
+            const endTime = Date.now();
+            
+            // Add bot response
+            const botMsg = document.createElement('div');
+            botMsg.className = 'bot-message';
+            botMsg.innerHTML = `<strong>Medic Mouse:</strong> ${response.message}`;
+            chatMessages.appendChild(botMsg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Update analysis panel
+            displayTestAnalysis(response.analysis);
+            
+            // Update stats
+            testStats.count++;
+            testStats.totalTime += (endTime - startTime);
+            if (response.successful) testStats.successful++;
+            if (response.unknownItems) testStats.unknownItems += response.unknownItems;
+            
+            updateTestStats();
+            
+        }, 1500);
+    }
+    
+    function generateTestResponse(parsedData) {
+        // This is a simplified demo response generator
+        const hasConditions = parsedData.conditions.length > 0;
+        const hasBloodThinners = parsedData.medicationTypes.some(t => 
+            t.toLowerCase().includes('blood thinner')
+        );
+        
+        let message = '';
+        let analysis = [];
+        
+        if (hasBloodThinners) {
+            message = `Hi ${parsedData.leadName || 'there'},<br><br>`;
+            message += "I've reviewed the medical information and found that blood thinners are a complete contraindication for aesthetic treatments due to bleeding risk.";
+            analysis.push({
+                name: 'Blood Thinner',
+                status: 'Contraindicated',
+                clinics: 'All clinics'
+            });
+        } else if (hasConditions) {
+            message = `Hi ${parsedData.leadName || 'there'},<br><br>`;
+            message += `I've checked the eligibility for ${parsedData.clinic || 'treatment'}. `;
+            
+            // Demo response based on common conditions
+            if (parsedData.conditions.some(c => c.toLowerCase().includes('diabetes'))) {
+                message += "For diabetes, most clinics can provide treatment with a doctor's note confirming stable blood sugar levels.";
+                analysis.push({
+                    name: 'Diabetes',
+                    status: 'Conditional',
+                    clinics: 'Most clinics with doctor note'
+                });
+            } else {
+                message += "Based on the conditions provided, please check with specific clinics for their requirements.";
+            }
+        } else {
+            message = "I didn't find any medical conditions or medications to check. Could you please provide the information in the standard format?";
+        }
+        
+        return {
+            message,
+            analysis,
+            successful: hasConditions,
+            unknownItems: 0
+        };
+    }
+    
+    function displayTestAnalysis(analysis) {
+        const resultsDiv = document.getElementById('testAnalysisResults');
+        
+        if (analysis.length === 0) {
+            resultsDiv.innerHTML = '<p style="color: #999;">No medical conditions detected in the query.</p>';
+            return;
+        }
+        
+        let html = '';
+        analysis.forEach(item => {
+            html += `
+                <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #e5e5e5;">
+                    <div style="font-weight: 600; margin-bottom: 8px;">${item.name}</div>
+                    <div style="font-size: 14px; color: #666;">
+                        <strong>Status:</strong> ${item.status}<br>
+                        <strong>Clinics:</strong> ${item.clinics}
+                    </div>
+                </div>
+            `;
+        });
+        
+        resultsDiv.innerHTML = html;
+    }
+    
+    function updateTestStats() {
+        document.getElementById('testCount').textContent = testStats.count;
+        document.getElementById('testSuccessRate').textContent = 
+            testStats.count > 0 ? Math.round((testStats.successful / testStats.count) * 100) + '%' : '0%';
+        document.getElementById('testAvgResponseTime').textContent = 
+            testStats.count > 0 ? Math.round(testStats.totalTime / testStats.count) + 'ms' : '0ms';
+        document.getElementById('testUnknownCount').textContent = testStats.unknownItems;
+    }
+    
+    // Initialize on load
+    initTestingPage();
+</script>

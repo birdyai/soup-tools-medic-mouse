@@ -1,0 +1,142 @@
+{
+  "conditions": {
+    "diabetes": {
+      "universal": null,
+      "clinics": {
+        "plush": "yes",
+        "aura": "yes_with_note",
+        "villa": "no",
+        "eden": "yes",
+        "beaula": "yes"
+      }
+    },
+    "type 2 diabetes": {
+      "universal": null,
+      "clinics": {
+        "plush": "yes",
+        "aura": "yes_with_note",
+        "villa": "no",
+        "eden": "yes",
+        "beaula": "yes"
+      }
+    },
+    "type 2 diabetes both well controlled": {
+      "universal": null,
+      "clinics": {
+        "plush": "yes",
+        "aura": "yes",
+        "villa": "yes",
+        "eden": "yes",
+        "beaula": "yes"
+      }
+    },
+    "underactive thyroid": {
+      "universal": null,
+      "clinics": {
+        "plush": "yes",
+        "aura": "yes",
+        "villa": "yes_with_note",
+        "eden": "yes",
+        "beaula": "yes_with_note"
+      }
+    },
+    "hypothyroidism": {
+      "universal": null,
+      "clinics": {
+        "plush": "yes",
+        "aura": "yes",
+        "villa": "yes_with_note",
+        "eden": "yes",
+        "beaula": "yes_with_note"
+      }
+    },
+    "pacemaker": {
+      "universal": null,
+      "clinics": {
+        "plush": "no",
+        "aura": "no",
+        "villa": "no",
+        "eden": "yes_with_exceptions"
+      }
+    },
+    "pregnancy": {
+      "universal": "no"
+    },
+    "high blood pressure": {
+      "universal": null,
+      "clinics": {
+        "plush": "yes_with_note",
+        "aura": "yes",
+        "villa": "yes_with_note",
+        "eden": "yes"
+      }
+    },
+    "hypertension": {
+      "universal": null,
+      "clinics": {
+        "plush": "yes_with_note",
+        "aura": "yes",
+        "villa": "yes_with_note",
+        "eden": "yes"
+      }
+    }
+  },
+  "medications": {
+    "aspirin": {
+      "type": "blood_thinner",
+      "universal": null,
+      "clinics": {
+        "plush": "yes_with_note",
+        "aura": "no"
+      }
+    },
+    "warfarin": {
+      "type": "blood_thinner",
+      "universal": "no"
+    },
+    "metformin": {
+      "type": "diabetes_medication",
+      "universal": null,
+      "clinics": {
+        "plush": "yes",
+        "aura": "yes",
+        "villa": "yes",
+        "eden": "yes"
+      }
+    },
+    "levothyroxine": {
+      "type": "thyroid_medication",
+      "universal": null,
+      "clinics": {
+        "plush": "yes",
+        "aura": "yes",
+        "villa": "yes",
+        "eden": "yes"
+      }
+    },
+    "zimpeck": {
+      "type": "weight_loss_injection",
+      "universal": null,
+      "clinics": {
+        "plush": "needs_check",
+        "aura": "needs_check",
+        "villa": "needs_check",
+        "eden": "needs_check"
+      }
+    },
+    "ozempic": {
+      "type": "diabetes_weight_loss",
+      "universal": null,
+      "clinics": {
+        "plush": "yes_with_note",
+        "aura": "yes",
+        "villa": "yes_with_note",
+        "eden": "yes"
+      }
+    }
+  },
+  "medication_types": {
+    "blood_thinner": "no",
+    "anticoagulant": "no"
+  }
+}

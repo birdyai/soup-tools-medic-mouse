@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medic Mouse Testing Dashboard (Live Database)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            color: #e74c3c;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .db-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-left: auto;
+        }
+        
+        .db-status.connected {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .db-status.disconnected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .panel {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        
+        .panel h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        
+        /* Chat Simulator Styles */
+        .chat-container {
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background: #fafafa;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+        
+        .message.user {
+            background: #3498db;
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+        
+        .message.bot {
+            background: #ecf0f1;
+            color: #2c3e50;
+        }
+        
+        .message .time {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+        
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input textarea {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: none;
+            height: 100px;
+        }
+        
+        .chat-input button {
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .chat-input button:hover {
+            background: #2980b9;
+        }
+        
+        /* Results Panel */
+        .results-container {
+            max-height: 450px;
+            overflow-y: auto;
+        }
+        
+        .result-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .result-item h4 {
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+        
+        .result-item.success {
+            border-left: 4px solid #27ae60;
+        }
+        
+        .result-item.failure {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-left: 10px;
+        }
+        
+        .status-yes {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .status-no {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .status-maybe {
+            background: #f39c12;
+            color: white;
+        }
+        
+        /* Statistics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .stat-box h5 {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .stat-box .value {
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        /* Loading indicator */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: none;
+        }
+        
+        /* Database management button */
+        .db-manage-btn {
+            float: right;
+            padding: 8px 16px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .db-manage-btn:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                🐭 Medic Mouse Testing Dashboard
+                <span class="db-status disconnected" id="dbStatus">
+                    <span class="status-dot">●</span>
+                    <span>Connecting to database...</span>
+                </span>
+            </h1>
+            <p>Test medical validation queries with real database • Dashboard is connected to live data</p>
+            <button class="db-manage-btn" onclick="window.open('/api/database', '_blank')">View Database</button>
+        </div>
+        
+        <div class="error-message" id="errorMessage"></div>
+        
+        <div class="main-grid">
+            <div class="panel">
+                <h2>🤖 Chat Simulator</h2>
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages"></div>
+                    <div class="chat-input">
+                        <textarea id="messageInput" placeholder="Paste or type your medical query here...
+Example:
+Clinic Name: Plush
+Lead First Name: John
+condition: diabetes
+medication: metformin"></textarea>
+                        <button onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h2>📊 Analysis Results</h2>
+                <div class="loading" id="loading">Processing query...</div>
+                <div class="results-container" id="resultsContainer"></div>
+            </div>
+        </div>
+        
+        <div class="panel">
+            <h2>📈 Testing Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h5>Total Queries</h5>
+                    <div class="value" id="totalQueries">0</div>
+                </div>
+                <div class="stat-box">
+                    <h5>Success Rate</h5>
+                    <div class="value" id="successRate">0%</div>
+                </div>
+                <div class="stat-box">
+                    <h5>Avg Response Time</h5>
+                    <div class="value" id="avgResponse">0ms</div>
+                </div>
+                <div class="stat-box">
+                    <h5>Unknown Items</h5>
+                    <div class="value" id="unknownItems">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // API configuration
+        const API_URL = 'http://localhost:8084';
+        let databaseConnected = false;
+        
+        // Statistics
+        let stats = {
+            total: 0,
+            successful: 0,
+            failed: 0,
+            unknown: 0,
+            responseTimes: []
+        };
+        
+        // Check database connection on load
+        async function checkDatabaseConnection() {
+            try {
+                const response = await fetch(`${API_URL}/health`);
+                const data = await response.json();
+                
+                if (data.status === 'ok') {
+                    databaseConnected = true;
+                    updateDatabaseStatus(true, data.database);
+                } else {
+                    databaseConnected = false;
+                    updateDatabaseStatus(false);
+                }
+            } catch (error) {
+                console.error('Database connection error:', error);
+                databaseConnected = false;
+                updateDatabaseStatus(false);
+                showError('Cannot connect to database server. Make sure the API server is running on port 8084.');
+            }
+        }
+        
+        function updateDatabaseStatus(connected, dbInfo = null) {
+            const statusEl = document.getElementById('dbStatus');
+            if (connected) {
+                statusEl.className = 'db-status connected';
+                statusEl.innerHTML = `
+                    <span class="status-dot">●</span>
+                    <span>Connected to live database ${dbInfo ? `(${dbInfo.conditions} conditions, ${dbInfo.medications} medications)` : ''}</span>
+                `;
+            } else {
+                statusEl.className = 'db-status disconnected';
+                statusEl.innerHTML = `
+                    <span class="status-dot">●</span>
+                    <span>Disconnected from database</span>
+                `;
+            }
+        }
+        
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            setTimeout(() => {
+                errorEl.style.display = 'none';
+            }, 5000);
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            if (!databaseConnected) {
+                showError('Cannot send message: Database is not connected');
+                return;
+            }
+            
+            // Add user message to chat
+            addChatMessage('user', message);
+            input.value = '';
+            
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('resultsContainer').innerHTML = '';
+            
+            const startTime = Date.now();
+            
+            try {
+                // Parse the message
+                const parsed = parseMessage(message);
+                
+                // Send to API for validation
+                const response = await fetch(`${API_URL}/api/validate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        conditions: parsed.conditions,
+                        medications: parsed.medications,
+                        medicationType: parsed.medicationType,
+                        clinic: parsed.clinic
+                    })
+                });
+                
+                const result = await response.json();
+                const responseTime = Date.now() - startTime;
+                
+                // Add complete parsed data to result
+                result.clinic = parsed.clinic;
+                result.patient = parsed.firstName;
+                result.treatmentArea = parsed.treatment;
+                
+                // Process and display results
+                displayResults(result);
+                
+                // Generate bot response
+                const botResponse = generateBotResponse(result, parsed);
+                addChatMessage('bot', botResponse);
+                
+                // Update statistics
+                updateStats(result, responseTime);
+                
+            } catch (error) {
+                console.error('Error processing query:', error);
+                showError('Error processing query: ' + error.message);
+                addChatMessage('bot', '❌ Error processing your query. Please check the API server is running.');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+        
+        function generateBotResponse(result, parsed) {
+            let response = '';
+            
+            if (result.unknowns.length > 0) {
+                response = `⚠️ I need to check with the messengers about:\n\n`;
+                result.unknowns.forEach(unknown => {
+                    response += `• ${unknown.type}: ${unknown.name}\n`;
+                });
+                response += `\n@messenger Please check with ${parsed.clinic} about the above items.`;
+            } else if (result.canBook) {
+                response = `✅ This client can be booked at ${parsed.clinic}!\n\n`;
+                response += formatCheckResults(result);
+            } else {
+                response = `❌ We cannot book this client because:\n\n`;
+                result.reasons.forEach(reason => {
+                    response += `• ${reason}\n`;
+                });
+                response += `\n` + formatCheckResults(result);
+            }
+            
+            return response;
+        }
+        
+        function formatCheckResults(result) {
+            let summary = '';
+            
+            if (result.conditions.length > 0) {
+                summary += `Medical Conditions:\n`;
+                result.conditions.forEach(cond => {
+                    summary += `• ${cond.name}: ${formatStatus(cond.status)}\n`;
+                });
+            }
+            
+            if (result.medications.length > 0) {
+                summary += `\nMedications:\n`;
+                result.medications.forEach(med => {
+                    summary += `• ${med.name}: ${formatStatus(med.status)}\n`;
+                });
+            }
+            
+            return summary;
+        }
+        
+        function formatStatus(status) {
+            const statusMap = {
+                'yes': '✅ ALLOWED',
+                'no': '❌ NOT ALLOWED',
+                'yes_with_note': '⚠️ ALLOWED WITH CONDITIONS',
+                'needs_check': '❓ NEEDS CHECK',
+                'unknown': '❓ UNKNOWN'
+            };
+            return statusMap[status] || status.toUpperCase();
+        }
+        
+        function addChatMessage(type, content) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            const time = new Date().toLocaleTimeString();
+            messageDiv.innerHTML = `
+                <div>${content}</div>
+                <div class="time">${time}</div>
+            `;
+            
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        function parseMessage(message) {
+            const lines = message.split('\n');
+            const parsed = {
+                clinic: '',
+                firstName: '',
+                conditions: [],
+                medications: [],
+                medicationType: '',
+                treatment: ''
+            };
+            
+            lines.forEach(line => {
+                const trimmedLine = line.trim();
+                
+                if (trimmedLine.includes('Clinic Name:')) {
+                    parsed.clinic = trimmedLine.split('Clinic Name:')[1].trim();
+                } else if (trimmedLine.includes('Lead Name:') || trimmedLine.includes('Lead First Name:')) {
+                    const splitChar = trimmedLine.includes('Lead Name:') ? 'Lead Name:' : 'Lead First Name:';
+                    parsed.firstName = trimmedLine.split(splitChar)[1].trim();
+                } else if (trimmedLine.toLowerCase().startsWith('condition:')) {
+                    const condition = trimmedLine.split(':')[1].trim();
+                    if (condition && condition.toLowerCase() !== 'none') {
+                        parsed.conditions.push(condition);
+                    }
+                } else if (trimmedLine.includes('Medical Condition:')) {
+                    const conditions = trimmedLine.split('Medical Condition:')[1].trim();
+                    if (conditions && conditions.toLowerCase() !== 'none') {
+                        parsed.conditions.push(...conditions.split(',').map(c => c.trim()));
+                    }
+                } else if (trimmedLine.toLowerCase().startsWith('medication:')) {
+                    const medication = trimmedLine.split(':')[1].trim();
+                    if (medication && medication.toLowerCase() !== 'none') {
+                        parsed.medications.push(medication);
+                    }
+                } else if (trimmedLine.includes('Current Medications')) {
+                    const meds = trimmedLine.split(':')[1].trim();
+                    if (meds && meds.toLowerCase() !== 'none') {
+                        parsed.medications.push(...meds.split(',').map(m => m.trim()));
+                    }
+                } else if (trimmedLine.includes('Medication Type')) {
+                    parsed.medicationType = trimmedLine.split(':')[1].trim();
+                } else if (trimmedLine.includes('Treatment:') || trimmedLine.includes('Treating:')) {
+                    const splitChar = trimmedLine.includes('Treatment:') ? 'Treatment:' : 'Treating:';
+                    parsed.treatment = trimmedLine.split(splitChar)[1].trim();
+                }
+            });
+            
+            return parsed;
+        }
+        
+        function displayResults(result) {
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = '';
+            
+            // Patient Info
+            const patientDiv = document.createElement('div');
+            patientDiv.className = 'result-item';
+            patientDiv.innerHTML = `
+                <h4>👤 Patient Information</h4>
+                <p><strong>Name:</strong> ${result.patient || 'Not provided'}<br>
+                <strong>Clinic:</strong> ${result.clinic}<br>
+                <strong>Treatment Area:</strong> ${result.treatmentArea || 'Not specified'}</p>
+            `;
+            container.appendChild(patientDiv);
+            
+            // Medical Conditions
+            if (result.conditions.length > 0) {
+                const condDiv = document.createElement('div');
+                condDiv.className = 'result-item';
+                condDiv.innerHTML = `<h4>🏥 Medical Conditions (${result.conditions.length} found)</h4>`;
+                
+                result.conditions.forEach((cond, index) => {
+                    const statusText = cond.inDatabase ? formatStatus(cond.status) : '❓ NOT IN DATABASE - NEEDS CHECK';
+                    const statusClass = cond.status === 'needs_check' ? 'maybe' : getStatusClass(cond.status);
+                    condDiv.innerHTML += `
+                        <p><strong>${index + 1}. ${cond.name}:</strong> 
+                        <span class="status-badge status-${statusClass}">${statusText}</span></p>
+                    `;
+                });
+                container.appendChild(condDiv);
+            }
+            
+            // Medications
+            if (result.medications.length > 0) {
+                const medDiv = document.createElement('div');
+                medDiv.className = 'result-item';
+                medDiv.innerHTML = `<h4>💊 Current Medications (${result.medications.length} found)</h4>`;
+                
+                result.medications.forEach((med, index) => {
+                    const statusText = med.inDatabase ? formatStatus(med.status) : '❓ NOT IN DATABASE - NEEDS CHECK';
+                    const statusClass = med.status === 'needs_check' ? 'maybe' : getStatusClass(med.status);
+                    medDiv.innerHTML += `
+                        <p><strong>${index + 1}. ${med.name}:</strong> 
+                        <span class="status-badge status-${statusClass}">${statusText}</span></p>
+                    `;
+                });
+                container.appendChild(medDiv);
+            }
+            
+            // Overall Decision
+            const overallDiv = document.createElement('div');
+            overallDiv.className = `result-item ${result.canBook ? 'success' : 'failure'}`;
+            const decision = result.unknowns.length > 0 ? 'NEEDS CHECK' : (result.canBook ? 'CAN BOOK' : 'CANNOT BOOK');
+            const decisionClass = result.unknowns.length > 0 ? 'maybe' : (result.canBook ? 'yes' : 'no');
+            overallDiv.innerHTML = `
+                <h4>✅ Overall Decision <span class="status-badge status-${decisionClass}">${decision}</span></h4>
+                ${result.reasons.length > 0 ? '<p><strong>Reasons:</strong></p><ul>' + result.reasons.map(r => `<li>${r}</li>`).join('') + '</ul>' : ''}
+                ${result.unknowns.length > 0 ? '<p><strong>Items need manual verification before booking</strong></p>' : ''}
+            `;
+            container.appendChild(overallDiv);
+        }
+        
+        function getStatusClass(status) {
+            if (status === 'yes') return 'yes';
+            if (status === 'no' || status === 'Not Able to Have Treatment') return 'no';
+            return 'maybe';
+        }
+        
+        function updateStats(result, responseTime) {
+            stats.total++;
+            stats.responseTimes.push(responseTime);
+            
+            if (result.unknowns.length > 0) {
+                stats.unknown++;
+            } else if (result.canBook) {
+                stats.successful++;
+            } else {
+                stats.failed++;
+            }
+            
+            // Update UI
+            document.getElementById('totalQueries').textContent = stats.total;
+            document.getElementById('successRate').textContent = Math.round((stats.successful / stats.total) * 100) + '%';
+            document.getElementById('avgResponse').textContent = Math.round(stats.responseTimes.reduce((a, b) => a + b, 0) / stats.responseTimes.length) + 'ms';
+            document.getElementById('unknownItems').textContent = stats.unknown;
+        }
+        
+        // Handle Enter key
+        document.getElementById('messageInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        
+        // Check database connection on page load
+        window.addEventListener('load', () => {
+            checkDatabaseConnection();
+            // Re-check every 5 seconds
+            setInterval(checkDatabaseConnection, 5000);
+        });
+    </script>
+</body>
+</html>
